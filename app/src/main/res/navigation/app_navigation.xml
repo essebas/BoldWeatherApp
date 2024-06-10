@@ -9,5 +9,14 @@
         android:id="@+id/searchFragment"
         android:name="com.sebasdev.boldweatherapp.search.presentation.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_forecastsOfLocationFragment"
+            app:destination="@id/forecastsOfLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forecastsOfLocationFragment"
+        android:name="com.sebasdev.boldweatherapp.forecast.presentation.ForecastsOfLocationFragment"
+        android:label="fragment_forecasts_of_location"
+        tools:layout="@layout/fragment_forecasts_of_location" />
 </navigation>

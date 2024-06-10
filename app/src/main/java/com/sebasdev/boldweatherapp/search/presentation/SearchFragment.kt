@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.sebasdev.boldweatherapp.R
 import com.sebasdev.boldweatherapp.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnContinue.setOnClickListener {
+            findNavController().navigate(R.id.action_searchFragment_to_forecastsOfLocationFragment)
+        }
 
         viewModel.uiState().observe(viewLifecycleOwner, Observer { list ->
             binding.txvResult.text = list.toString()

@@ -1,29 +1,30 @@
-package com.sebasdev.boldweatherapp.search.presentation
+package com.sebasdev.boldweatherapp.forecast.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sebasdev.boldweatherapp.core_domain.util.Resource
+import com.sebasdev.boldweatherapp.forecast.domain.models.ForecastModel
+import com.sebasdev.boldweatherapp.forecast.domain.use_cases.GetForecastsOfLocationUseCase
 import com.sebasdev.boldweatherapp.search.domain.models.SearchLocationModel
-import com.sebasdev.boldweatherapp.search.domain.use_cases.SearchLocationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val searchLocationsUseCase: SearchLocationsUseCase
+class ForecastsOfLocationViewModel @Inject constructor(
+    private val getForecastsOfLocationUseCase: GetForecastsOfLocationUseCase
 ) : ViewModel() {
 
-    protected val uiState: MutableLiveData<List<SearchLocationModel>> = MutableLiveData()
-    fun uiState(): LiveData<List<SearchLocationModel>> = uiState
+    protected val uiState: MutableLiveData<ForecastModel> = MutableLiveData()
+    fun uiState(): LiveData<ForecastModel> = uiState
 
-    fun searchLocation() {
+    fun forecastDetailsOfLocation() {
         viewModelScope.launch {
-            when (val result = searchLocationsUseCase.invoke("Colom")) {
+            when (val result = getForecastsOfLocationUseCase.invoke("Bogota", "2")) {
                 is Resource.Error -> {
-                    uiState.value = emptyList()
+                    //uiState.value =
                 }
 
                 is Resource.Success -> {
@@ -32,4 +33,5 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
+
 }
