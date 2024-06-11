@@ -1,6 +1,7 @@
 package com.sebasdev.boldweatherapp.forecast.domain.use_cases
 
 import com.sebasdev.boldweatherapp.core_domain.repository.WeatherRepository
+import com.sebasdev.boldweatherapp.core_domain.util.ErrorCodes
 import com.sebasdev.boldweatherapp.core_domain.util.Resource
 import com.sebasdev.boldweatherapp.forecast.domain.models.ForecastModel
 import java.io.IOException
@@ -23,9 +24,14 @@ class GetForecastsOfLocationUseCase @Inject constructor(
                 weatherRepository.getForecastByLocation(query, daysOfForecast, language)
             emit(Resource.Success(forecastsOfLocation))
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred", e.code()))
         } catch (e: IOException) {
-            emit(Resource.Error("Couldn't reach server. Check your internet connection."))
+            emit(
+                Resource.Error(
+                    "Couldn't reach server. Check your internet connection.",
+                    ErrorCodes.NO_INTERNET_CONNECTION
+                )
+            )
         }
     }
 }

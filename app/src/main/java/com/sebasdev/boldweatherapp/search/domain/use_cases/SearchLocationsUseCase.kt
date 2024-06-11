@@ -1,6 +1,8 @@
 package com.sebasdev.boldweatherapp.search.domain.use_cases
 
+import android.util.Log
 import com.sebasdev.boldweatherapp.core_domain.repository.WeatherRepository
+import com.sebasdev.boldweatherapp.core_domain.util.ErrorCodes
 import com.sebasdev.boldweatherapp.core_domain.util.Resource
 import com.sebasdev.boldweatherapp.search.domain.models.SearchLocationModel
 import java.io.IOException
@@ -18,8 +20,13 @@ class SearchLocationsUseCase @Inject constructor(
             emit(Resource.Loading())
 
             when {
-                query.isBlank() -> emit(Resource.Error("Ingresa una ubicacion"))
-                query.length < 3 -> emit(Resource.Error("Ingresa mas de 3 caracteres"))
+                query.isBlank() || (query.length < 3) -> emit(
+                    Resource.Error(
+                        "",
+                        ErrorCodes.EMPTY_RESULT
+                    )
+                )
+
                 else -> {
                     val locationsList = weatherRepository.getSearchResultsByQuery(query)
                     emit(Resource.Success(locationsList))
@@ -27,9 +34,14 @@ class SearchLocationsUseCase @Inject constructor(
             }
 
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred", e.code()))
         } catch (e: IOException) {
-            emit(Resource.Error("Couldn't reach server. Check your internet connection."))
+            emit(
+                Resource.Error(
+                    "Couldn't reach server. Check your internet connection.",
+                    ErrorCodes.NO_INTERNET_CONNECTION
+                )
+            )
         }
     }
 }

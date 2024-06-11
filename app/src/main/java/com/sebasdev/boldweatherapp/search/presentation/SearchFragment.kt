@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.BackEventCompat
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sebasdev.boldweatherapp.R
 import com.sebasdev.boldweatherapp.databinding.FragmentSearchBinding
+import com.sebasdev.boldweatherapp.databinding.ScreenStateBinding
 import com.sebasdev.boldweatherapp.search.domain.models.SearchLocationModel
 import com.sebasdev.boldweatherapp.search.presentation.adapter.LocationsAdapter
 import com.sebasdev.boldweatherapp.search.presentation.state.SearchState
@@ -99,19 +103,27 @@ class SearchFragment : Fragment() {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.searchLocationsSaved.collect { state ->
                 when (state) {
-                    is SearchState.Error -> {
-                        //handleProgressIndicator(false)
-                        Log.d("observeState", "error: ${state.message}")
-                    }
+                    is SearchState.Loading -> handleProgressIndicator(true)
 
-                    is SearchState.Loading -> {
-                        handleProgressIndicator(true)
-                    }
+                    is SearchState.Success -> showSearchedLocations(
+                        state.data,
+                        adapterLocationsSaved,
+                        binding.statusScreenOnSavedLocations
+                    )
 
-                    is SearchState.Success -> {
-                        handleProgressIndicator(false)
-                        showSearchedLocations(state.data, adapterLocationsSaved)
-                    }
+                    is SearchState.EmptyResult -> showScreenState(
+                        R.drawable.empty_recent_locations_icon,
+                        R.string.screen_status_no_results_saved_locations,
+                        binding.statusScreenOnSavedLocations,
+                        adapterLocationsSaved
+                    )
+
+                    is SearchState.Error -> showScreenState(
+                        R.drawable.error_general_icon,
+                        R.string.screen_status_no_internet_connection,
+                        binding.statusScreenOnSearch,
+                        adapter
+                    )
 
                     else -> Unit
                 }
@@ -123,19 +135,34 @@ class SearchFragment : Fragment() {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.searchState.collect { state ->
                 when (state) {
-                    is SearchState.Error -> {
-                        //handleProgressIndicator(false)
-                        Log.d("observeState", "error: ${state.message}")
-                    }
+                    is SearchState.Loading -> handleProgressIndicator(true)
 
-                    is SearchState.Loading -> {
-                        handleProgressIndicator(true)
-                    }
+                    is SearchState.Success -> showSearchedLocations(
+                        state.data,
+                        adapter,
+                        binding.statusScreenOnSearch
+                    )
 
-                    is SearchState.Success -> {
-                        handleProgressIndicator(false)
-                        showSearchedLocations(state.data, adapter)
-                    }
+                    is SearchState.EmptyResult -> showScreenState(
+                        R.drawable.empty_result_icon,
+                        R.string.screen_status_no_results,
+                        binding.statusScreenOnSearch,
+                        adapter
+                    )
+
+                    is SearchState.NoInternetConnection -> showScreenState(
+                        R.drawable.cloud_off,
+                        R.string.screen_status_no_internet_connection,
+                        binding.statusScreenOnSearch,
+                        adapter
+                    )
+
+                    is SearchState.Error -> showScreenState(
+                        R.drawable.error_general_icon,
+                        R.string.screen_status_no_internet_connection,
+                        binding.statusScreenOnSearch,
+                        adapter
+                    )
 
                     else -> Unit
                 }
@@ -143,10 +170,33 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun showScreenState(
+        @DrawableRes statusIcon: Int,
+        @StringRes stateText: Int,
+        screenState: ScreenStateBinding,
+        adapterToClean: LocationsAdapter
+    ) {
+        adapterToClean.injectData(emptyList())
+        handleProgressIndicator(false)
+        screenState.apply {
+            imvStatusIcon.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    requireContext(),
+                    statusIcon
+                )
+            )
+            txvStatusText.text = getText(stateText)
+            root.visibility = View.VISIBLE
+        }
+    }
+
     private fun showSearchedLocations(
         locations: List<SearchLocationModel>,
-        adapterToInject: LocationsAdapter
+        adapterToInject: LocationsAdapter,
+        screenState: ScreenStateBinding
     ) {
+        handleProgressIndicator(false)
+        screenState.root.visibility = View.GONE
         adapterToInject.injectData(locations)
     }
 
@@ -158,12 +208,15 @@ class SearchFragment : Fragment() {
     }
 
     private fun onClickSearchedLocation(location: SearchLocationModel) {
-        Toast.makeText(requireContext(), location.name, Toast.LENGTH_LONG).show()
         viewModel.savedConsultedLocation(location)
         findNavController().navigate(
             R.id.action_searchFragment_to_forecastsOfLocationFragment, bundleOf(
                 "idLocation" to location.id
             )
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

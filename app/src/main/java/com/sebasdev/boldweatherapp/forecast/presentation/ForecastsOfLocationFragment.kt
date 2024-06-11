@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -18,6 +21,7 @@ import com.sebasdev.boldweatherapp.forecast.domain.models.ForecastDayModel
 import com.sebasdev.boldweatherapp.forecast.domain.models.ForecastModel
 import com.sebasdev.boldweatherapp.forecast.presentation.adapter.ForecastDayAdapter
 import com.sebasdev.boldweatherapp.forecast.presentation.state.ForecastDetailsState
+import com.sebasdev.boldweatherapp.search.presentation.state.SearchState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -55,12 +59,23 @@ class ForecastsOfLocationFragment : Fragment() {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.forecastDetailsState.collect { state ->
                 when (state) {
-                    is ForecastDetailsState.Error -> {
-                        handleProgressIndicator(false)
-                    }
-
                     is ForecastDetailsState.Loading -> handleProgressIndicator(true)
                     is ForecastDetailsState.Success -> renderForecastDetailsData(state.data)
+                    is ForecastDetailsState.EmptyResult -> showScreenState(
+                        R.drawable.empty_result_icon,
+                        R.string.screen_status_no_results
+                    )
+
+                    is ForecastDetailsState.NoInternetConnection -> showScreenState(
+                        R.drawable.cloud_off,
+                        R.string.screen_status_no_internet_connection
+                    )
+
+                    is ForecastDetailsState.Error -> showScreenState(
+                        R.drawable.error_general_icon,
+                        R.string.screen_status_no_internet_connection
+                    )
+
                     else -> Unit
                 }
             }
@@ -114,6 +129,23 @@ class ForecastsOfLocationFragment : Fragment() {
         binding.circularProgress.apply {
             isIndeterminate = isLoading
             visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun showScreenState(
+        @DrawableRes statusIcon: Int,
+        @StringRes stateText: Int
+    ) {
+        handleProgressIndicator(false)
+        binding.statusScreen.apply {
+            imvStatusIcon.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    requireContext(),
+                    statusIcon
+                )
+            )
+            txvStatusText.text = getText(stateText)
+            root.visibility = View.VISIBLE
         }
     }
 }

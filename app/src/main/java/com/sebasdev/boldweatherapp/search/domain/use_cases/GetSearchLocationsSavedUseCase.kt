@@ -1,6 +1,7 @@
 package com.sebasdev.boldweatherapp.search.domain.use_cases
 
 import com.sebasdev.boldweatherapp.core_domain.repository.WeatherRepository
+import com.sebasdev.boldweatherapp.core_domain.util.ErrorCodes
 import com.sebasdev.boldweatherapp.core_domain.util.Resource
 import com.sebasdev.boldweatherapp.search.domain.models.SearchLocationModel
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class GetSearchLocationsSavedUseCase @Inject constructor(
             val searchLocationsSaved = weatherRepository.getSearchLocationsSaved()
             emit(Resource.Success(searchLocationsSaved))
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage))
+            emit(Resource.Error(e.localizedMessage, ErrorCodes.EMPTY_RESULT))
         }
     }
 }

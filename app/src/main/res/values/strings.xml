@@ -4,7 +4,10 @@
     <string name="speed_in_kilometers_hour_text">%1$skm/h</string>
     <string name="value_in_percent">%1$s&#37;</string>
     <string name="current_forecast">Ahora</string>
-    <string name="forecast_days_label">Proximamente...</string>
+    <string name="forecast_days_label">Proximamente…</string>
     <string name="search_label">Buscar</string>
-    <string name="label_recent_searches">Tus busquedas recientes...</string>
+    <string name="label_recent_searches">Tus busquedas recientes…</string>
+    <string name="screen_status_no_results">No se encontraron resultados</string>
+    <string name="screen_status_no_internet_connection">Verifica tu conexión a internet</string>
+    <string name="screen_status_no_results_saved_locations">No tienes ubicaciones consultadas recientemente</string>
 </resources>
