@@ -8,7 +8,7 @@ data class LocationDto(
     val name: String,
     val region: String,
     val country: String,
-    val id: Double?,
+    val id: Int?,
     val url: String?,
     @SerializedName("tz_id")
     val timeZoneName: String?,

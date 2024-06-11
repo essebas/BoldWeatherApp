@@ -3,7 +3,7 @@ package com.sebasdev.boldweatherapp.search.domain.models
 import com.sebasdev.boldweatherapp.core_domain.models.LocationModel
 
 data class SearchLocationModel(
-    val id: Double?,
+    val id: Int?,
     val url: String?,
     override val lat: Double,
     override val lon: Double,

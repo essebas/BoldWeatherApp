@@ -18,6 +18,7 @@ interface WeatherApi {
         @Query("key") apiKey: String,
         @Query("q") searchQuery: String,
         @Query("days") daysOfForecast: String,
+        @Query("lang") language: String
     ): ForecastDto
 
 }

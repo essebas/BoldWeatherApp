@@ -1,18 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingHorizontal="16dp"
     tools:context=".forecast.presentation.ForecastsOfLocationFragment">
 
-    <TextView
-        android:id="@+id/txv_result"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/circular_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:visibility="gone"
+            app:indicatorSize="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/txv_general_title"
+            style="@style/TextAppearance.Material3.HeadlineLarge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Bogotá" />
+
+        <TextView
+            android:id="@+id/txv_general_subtitle"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txv_general_title"
+            tools:text="Colombia" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_current_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="invisible"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txv_general_subtitle"
+            app:strokeColor="@color/material_on_surface_stroke"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/txv_current_forecast_left_title"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current_forecast"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txv_current_forecast_left_right"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Actual" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/horizontal_barrier_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="txv_current_forecast_left_title, txv_current_forecast_left_right" />
+
+                <ImageView
+                    android:id="@+id/card_current_forecast_icon"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_barrier_title"
+                    tools:src="@drawable/text_img_weather" />
+
+                <TextView
+                    android:id="@+id/txv_current_forecast_center_title"
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="36sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_current_forecast_icon"
+                    tools:text="11.1°C" />
+
+                <TextView
+                    android:id="@+id/txv_current_forecast_center_subtitle"
+                    style="@style/TextAppearance.Material3.BodyLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@id/horizontal_barrier_bottom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txv_current_forecast_center_title"
+                    tools:text="Parcialmente nublado" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/horizontal_barrier_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="txv_current_forecast_center_subtitle" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_barrier_bottom">
+
+                    <ImageView
+                        android:id="@+id/imv_forecast_icon_heat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/heat_icon"
+                        app:tint="?colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txv_forecast_text_heat"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/imv_forecast_icon_heat"
+                        tools:text="13" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout3"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_barrier_bottom">
+
+                    <ImageView
+                        android:id="@+id/imv_forecast_icon_wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wind_speed_icon"
+                        app:tint="?colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txv_forecast_text_wind"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/imv_forecast_icon_wind"
+                        tools:text="20" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_barrier_bottom">
+
+                    <ImageView
+                        android:id="@+id/imv_forecast_icon_humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/humidity_icon"
+                        app:tint="?colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txv_forecast_text_humidity"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/imv_forecast_icon_humidity"
+                        tools:text="20" />
+
+                </RelativeLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/txv_forecast_days_label"
+            style="@style/TextAppearance.Material3.BodySmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/forecast_days_label"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_current_forecast" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_forecast_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txv_forecast_days_label"
+            tools:itemCount="3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

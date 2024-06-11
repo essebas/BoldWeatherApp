@@ -13,5 +13,11 @@ data class CurrentDto(
     val tempF: Double,
     @SerializedName("is_day")
     val isDay: Int,
-    val condition: ConditionDto
+    val condition: ConditionDto,
+    @SerializedName("wind_kph")
+    val windKph: Double,
+    @SerializedName("humidity")
+    val humidity: Int,
+    @SerializedName("heatindex_c")
+    val heatIndexC: Double,
 )

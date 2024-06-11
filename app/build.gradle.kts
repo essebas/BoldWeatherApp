@@ -50,10 +50,12 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(libs.retrofit)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.gson)
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
     implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -62,6 +64,7 @@ dependencies {
     implementation(libs.lifecycle.livedata)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.glide)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

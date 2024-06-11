@@ -1,5 +1,7 @@
 package com.sebasdev.boldweatherapp.core_data.di
 
+import com.sebasdev.boldweatherapp.core_data.data_source.local.WeatherLocalDataSource
+import com.sebasdev.boldweatherapp.core_data.data_source.local.WeatherLocalDataSourceImpl
 import com.sebasdev.boldweatherapp.core_data.data_source.remote.WeatherRemoteDataSource
 import com.sebasdev.boldweatherapp.core_data.data_source.remote.WeatherRemoteDataSourceImpl
 import com.sebasdev.boldweatherapp.core_data.repository.WeatherRepositoryImpl
@@ -21,6 +23,12 @@ abstract class RepositoryModule {
     abstract fun bindWeatherRemoteDataSource(
         weatherRemoteDataSourceImpl: WeatherRemoteDataSourceImpl
     ): WeatherRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindWeatherLocalDataSource(
+        weatherLocalDataSourceImpl: WeatherLocalDataSourceImpl
+    ): WeatherLocalDataSource
 
     @Binds
     @Singleton
